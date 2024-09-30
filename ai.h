@@ -17,4 +17,11 @@
  */
 Square getBestMove(GameModel &model);
 
+bool gameIsOver(GameModel& model);
+
+int evaluateBoard(GameModel& model, Player currentPlayer);
+
+int minimax(GameModel &model, int depth, bool maximizingPlayer);
+
+
 #endif
