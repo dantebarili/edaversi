@@ -147,6 +147,23 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                             }
                         }
                     }
+                    if(adyascencia == 1)
+                    {
+                        for (int y = 0; y < BOARD_SIZE; y++)
+                        {
+                            for (int x = 0; x < BOARD_SIZE; x++)
+                            {
+                                if((move.x - x == 0) && )
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                    }
                     
         
                 }
