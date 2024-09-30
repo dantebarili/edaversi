@@ -20,7 +20,7 @@ add_executable(main main.cpp model.cpp view.cpp controller.cpp ai.cpp)
 # Raylib
 find_package(raylib CONFIG REQUIRED)
 target_include_directories(main PRIVATE ${raylib_INCLUDE_DIRS})
-target_link_libraries(main PRIVATE ${raylib_LIBRARIES})
+target_link_libraries(main PRIVATE raylib)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     # From "Working with CMake" documentation:
     target_link_libraries(main PRIVATE "-framework IOKit" "-framework Cocoa" "-framework OpenGL")

@@ -88,18 +88,18 @@ bool isSquareValid(Square square)
 
 void getValidMoves(GameModel &model, Moves &validMoves)
 {
-    // To-do: your code goes here...
 
-    Player player = getCurrentPlayer();
-    bool adyascencia = 0;
+    Player player = getCurrentPlayer(model);
+    bool adyascencia;
+    bool alineado;
 
     for (int y = 0; y < BOARD_SIZE; y++)
         for (int x = 0; x < BOARD_SIZE; x++)
         {
             Square move = {x, y};
+            adyascencia = 0;
+            alineado = 0;
 
-            // +++ TEST
-            // Lists all empty squares...
             if (getBoardPiece(model, move) == PIECE_EMPTY)
             {
                 if(player == PLAYER_BLACK)
@@ -147,31 +147,48 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                             }
                         }
                     }
+
                     if(adyascencia == 1)
                     {
+                        // Chequeamos linealidad con alguna ficha propia
                         for (int y = 0; y < BOARD_SIZE; y++)
                         {
+                            if(alineado == 1)
+                                break;
+
                             for (int x = 0; x < BOARD_SIZE; x++)
                             {
+                                if(alineado == 1)
+                                    break;
+
                                 if((move.x - x == 0) && (move.y - y != 0))
                                 {
-
+                                    // chequeamos si hay una ficha del color propio
+                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_BLACK)
+                                    {
+                                        alineado = 1;
+                                    }
                                 }else if((move.x - x != 0) && (move.y - y == 0))
                                 {
-                                    
+                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_BLACK)
+                                    {
+                                        alineado = 1;
+                                    }
                                 }else if((move.x - x) == (move.y - y))
                                 {
-                                    
+                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_BLACK)
+                                    {
+                                        alineado = 1;
+                                    }
                                 }
+
+                                if(alineado == 1)
+                                    validMoves.push_back(move);
+                                
                             }
                         }
                     }
-                    else
-                    {
-
-                    }
-                    
-        
+    
                 }
                 else
                 {
@@ -218,17 +235,60 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                             }
                         }
                     }
+
+                    if(adyascencia == 1)
+                    {
+                        // Chequeamos linealidad con alguna ficha propia
+                        for (int y = 0; y < BOARD_SIZE; y++)
+                        {
+                            if(alineado == 1)
+                                break;
+
+                            for (int x = 0; x < BOARD_SIZE; x++)
+                            {
+                                if(alineado == 1)
+                                    break;
+
+                                if((move.x - x == 0) && (move.y - y != 0))
+                                {
+                                    // chequeamos si hay una ficha del color propio
+                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_WHITE)
+                                    {
+                                        alineado = 1;
+                                    }
+                                }else if((move.x - x != 0) && (move.y - y == 0))
+                                {
+                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_WHITE)
+                                    {
+                                        alineado = 1;
+                                    }
+                                }else if((move.x - x) == (move.y - y))
+                                {
+                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_WHITE)
+                                    {
+                                        alineado = 1;
+                                    }
+                                }
+
+                                if(alineado == 1)
+                                    validMoves.push_back(move);
+                                
+                            }
+                        }
+                    }
+
                 }
-                validMoves.push_back(move);
             }
-            // --- TEST
+            
         }
-    
 
 }
 
 bool playMove(GameModel &model, Square move)
 {
+    bool terminar = 0;
+    bool propia = 0;
+
     // Set game piece
     Piece piece =
         (getCurrentPlayer(model) == PLAYER_WHITE)
@@ -237,7 +297,241 @@ bool playMove(GameModel &model, Square move)
 
     setBoardPiece(model, move, piece);
 
-    // To-do: your code goes here...
+    // cambio de color las intermedias 
+
+    // a la derecha
+    for (int x = 1; x < BOARD_SIZE && terminar == 0; x++) {
+        Square pos = {move.x + x, move.y};
+
+        if (getCurrentPlayer(model) == PLAYER_WHITE) {
+
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_BLACK)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_WHITE) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < x; i++) {
+                        Square intermedia = {move.x + i, move.y};
+                        setBoardPiece(model, intermedia, PIECE_WHITE); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+
+        } else { // Caso de que el jugador actual sea negro
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_WHITE)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_BLACK) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < x; i++) {
+                        Square intermedia = {move.x + i, move.y};
+                        setBoardPiece(model, intermedia, PIECE_BLACK); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+        }
+    }
+    // a la izquierda
+    for (int x = 1; x < BOARD_SIZE && terminar == 0; x++) {
+        Square pos = {move.x - x, move.y};
+
+        if (getCurrentPlayer(model) == PLAYER_WHITE) {
+
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_BLACK)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_WHITE) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < x; i++) {
+                        Square intermedia = {move.x - i, move.y};
+                        setBoardPiece(model, intermedia, PIECE_WHITE); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+
+        } else { // Caso de que el jugador actual sea negro
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_WHITE)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_BLACK) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < x; i++) {
+                        Square intermedia = {move.x - i, move.y};
+                        setBoardPiece(model, intermedia, PIECE_BLACK); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+        }
+    }
+    // arriba
+    for (int y = 1; y < BOARD_SIZE && terminar == 0; y++) {
+        Square pos = {move.x, move.y + y};
+
+        if (getCurrentPlayer(model) == PLAYER_WHITE) {
+
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_BLACK)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_WHITE) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < y; i++) {
+                        Square intermedia = {move.x, move.y + i};
+                        setBoardPiece(model, intermedia, PIECE_WHITE); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+
+        } else { // Caso de que el jugador actual sea negro
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_WHITE)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_BLACK) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < y; i++) {
+                        Square intermedia = {move.x, i+ move.y};
+                        setBoardPiece(model, intermedia, PIECE_BLACK); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+        }
+    }
+    // abajo
+    for (int y = 1; y < BOARD_SIZE && terminar == 0; y++) {
+        Square pos = {move.x, move.y - y};
+
+        if (getCurrentPlayer(model) == PLAYER_WHITE) {
+
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_BLACK)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_WHITE) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < y; i++) {
+                        Square intermedia = {move.x, move.y - i};
+                        setBoardPiece(model, intermedia, PIECE_WHITE); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+
+        } else { // Caso de que el jugador actual sea negro
+            if (isSquareValid(pos)) {
+                // Si encuentra una casilla vacía, termina el ciclo
+                if (getBoardPiece(model, pos) == PIECE_EMPTY)
+                    break;
+
+                if (getBoardPiece(model, pos) == PIECE_WHITE)
+                    continue;
+
+                // Si encuentra una pieza negra, verifica si ya había una pieza blanca al otro lado
+                if (getBoardPiece(model, pos) == PIECE_BLACK) {
+                    
+                    // Cambiar de color las del medio
+                    for (int i = 1; i < y; i++) {
+                        Square intermedia = {move.x, move.y - i};
+                        setBoardPiece(model, intermedia, PIECE_BLACK); // Cambia las piezas negras a blancas
+                    }
+                    break;  // Termina el ciclo
+                    
+                }
+
+            } else {
+                // Si la casilla no es válida, termina
+                break;
+            }
+        }
+    }
+
 
     // Update timer
     double currentTime = GetTime();

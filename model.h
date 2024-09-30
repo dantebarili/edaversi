@@ -9,6 +9,7 @@
 #define MODEL_H
 
 #include <cstdint>
+#include <cstring>
 #include <vector>
 
 #define BOARD_SIZE 8
