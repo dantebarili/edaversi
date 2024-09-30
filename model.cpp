@@ -7,7 +7,7 @@
 
 #include "raylib.h"
 
-#include "model.h"
+#include "model.h" 
 
 void initModel(GameModel &model)
 {
@@ -90,6 +90,9 @@ void getValidMoves(GameModel &model, Moves &validMoves)
 {
     // To-do: your code goes here...
 
+    Player player = getCurrentPlayer();
+    bool adyascencia = 0;
+
     for (int y = 0; y < BOARD_SIZE; y++)
         for (int x = 0; x < BOARD_SIZE; x++)
         {
@@ -98,9 +101,107 @@ void getValidMoves(GameModel &model, Moves &validMoves)
             // +++ TEST
             // Lists all empty squares...
             if (getBoardPiece(model, move) == PIECE_EMPTY)
+            {
+                if(player == PLAYER_BLACK)
+                {
+                    Square moveAux = move;
+                    moveAux.x++;
+                    if(isSquareValid(moveAux))
+                    {
+                        if(getBoardPiece(model, moveAux) == PIECE_WHITE)
+                        {
+                            adyascencia = 1;
+                        }
+                    }
+                    if (adyascencia == 0)
+                    {
+                        moveAux.x -= 2;
+                        if(isSquareValid(moveAux))
+                        {
+                            if(getBoardPiece(model, moveAux) == PIECE_WHITE)
+                            {
+                                adyascencia = 1;
+                            }
+                        }
+                    }
+                    if (adyascencia == 0)
+                    {
+                        moveAux.x++;
+                        moveAux.y++;
+                        if(isSquareValid(moveAux))
+                        {
+                            if(getBoardPiece(model, moveAux) == PIECE_WHITE)
+                            {
+                                adyascencia = 1;
+                            }
+                        }
+                    }
+                    if (adyascencia == 0)
+                    {
+                        moveAux.y -= 2;
+                        if(isSquareValid(moveAux))
+                        {
+                            if(getBoardPiece(model, moveAux) == PIECE_WHITE)
+                            {
+                                adyascencia = 1;
+                            }
+                        }
+                    }
+                    
+        
+                }
+                else
+                {
+                    Square moveAux = move;
+                    moveAux.x++;
+                    if(isSquareValid(moveAux))
+                    {
+                        if(getBoardPiece(model, moveAux) == PIECE_BLACK)
+                        {
+                            adyascencia = 1;
+                        }
+                    }
+                    if (adyascencia == 0)
+                    {
+                        moveAux.x -= 2;
+                        if(isSquareValid(moveAux))
+                        {
+                            if(getBoardPiece(model, moveAux) == PIECE_BLACK)
+                            {
+                                adyascencia = 1;
+                            }
+                        }
+                    }
+                    if (adyascencia == 0)
+                    {
+                        moveAux.x++;
+                        moveAux.y++;
+                        if(isSquareValid(moveAux))
+                        {
+                            if(getBoardPiece(model, moveAux) == PIECE_BLACK)
+                            {
+                                adyascencia = 1;
+                            }
+                        }
+                    }
+                    if (adyascencia == 0)
+                    {
+                        moveAux.y -= 2;
+                        if(isSquareValid(moveAux))
+                        {
+                            if(getBoardPiece(model, moveAux) == PIECE_BLACK)
+                            {
+                                adyascencia = 1;
+                            }
+                        }
+                    }
+                }
                 validMoves.push_back(move);
+            }
             // --- TEST
         }
+    
+
 }
 
 bool playMove(GameModel &model, Square move)
