@@ -153,9 +153,15 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                         {
                             for (int x = 0; x < BOARD_SIZE; x++)
                             {
-                                if((move.x - x == 0) && )
+                                if((move.x - x == 0) && (move.y - y != 0))
                                 {
 
+                                }else if((move.x - x != 0) && (move.y - y == 0))
+                                {
+                                    
+                                }else if((move.x - x) == (move.y - y))
+                                {
+                                    
                                 }
                             }
                         }
