@@ -5,7 +5,7 @@
  * @copyright Copyright (c) 2023-2024
  */
 
-#include "raylib.h"
+#include <raylib.h>
 
 #include "model.h" 
 
@@ -92,194 +92,116 @@ void getValidMoves(GameModel &model, Moves &validMoves)
     Player player = getCurrentPlayer(model);
     bool adyascencia;
     bool alineado;
+    std::vector<Square> direcciones = {{1,0},{0,1},{-1,0},{0,-1},{1,1},{-1,1},{-1,-1},{1,-1}};
+
 
     for (int y = 0; y < BOARD_SIZE; y++)
         for (int x = 0; x < BOARD_SIZE; x++)
         {
             Square move = {x, y};
-            adyascencia = 0;
-            alineado = 0;
-
+            adyascencia = false;
+            alineado = false;
+            
             if (getBoardPiece(model, move) == PIECE_EMPTY)
             {
+                Square moveAux;
+
                 if(player == PLAYER_BLACK)
                 {
-                    Square moveAux = move;
-                    moveAux.x++;
-                    if(isSquareValid(moveAux))
+                    for(int i = 0; i < 4 && !adyascencia; i++)
                     {
-                        if(getBoardPiece(model, moveAux) == PIECE_WHITE)
+                        moveAux = move;
+                        moveAux.x += direcciones[i].x;
+                        moveAux.y += direcciones[i].y;
+                        if (isSquareValid(moveAux))
                         {
-                            adyascencia = 1;
-                        }
-                    }
-                    if (adyascencia == 0)
-                    {
-                        moveAux.x -= 2;
-                        if(isSquareValid(moveAux))
-                        {
-                            if(getBoardPiece(model, moveAux) == PIECE_WHITE)
+                            if(getBoardPiece(model,moveAux) == PIECE_WHITE)
                             {
-                                adyascencia = 1;
+                                adyascencia = true;
                             }
                         }
                     }
-                    if (adyascencia == 0)
+                    if(adyascencia)
                     {
-                        moveAux.x++;
-                        moveAux.y++;
-                        if(isSquareValid(moveAux))
+                        for(auto& direccion : direcciones)
                         {
-                            if(getBoardPiece(model, moveAux) == PIECE_WHITE)
+                            bool oponenteEncontrado = false;
+                            moveAux = move;
+                            moveAux.x += direccion.x;
+                            moveAux.y += direccion.y;
+                            while(isSquareValid(moveAux))
                             {
-                                adyascencia = 1;
-                            }
-                        }
-                    }
-                    if (adyascencia == 0)
-                    {
-                        moveAux.y -= 2;
-                        if(isSquareValid(moveAux))
-                        {
-                            if(getBoardPiece(model, moveAux) == PIECE_WHITE)
-                            {
-                                adyascencia = 1;
-                            }
-                        }
-                    }
-
-                    if(adyascencia == 1)
-                    {
-                        // Chequeamos linealidad con alguna ficha propia
-                        for (int y = 0; y < BOARD_SIZE; y++)
-                        {
-                            if(alineado == 1)
-                                break;
-
-                            for (int x = 0; x < BOARD_SIZE; x++)
-                            {
-                                if(alineado == 1)
+                                if(getBoardPiece(model,moveAux) == PIECE_WHITE)
+                                {
+                                    oponenteEncontrado = true;
+                                }else if(getBoardPiece(model,moveAux) == PIECE_BLACK && oponenteEncontrado)
+                                {
+                                    alineado = true;
                                     break;
-
-                                if((move.x - x == 0) && (move.y - y != 0))
-                                {
-                                    // chequeamos si hay una ficha del color propio
-                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_BLACK)
-                                    {
-                                        alineado = 1;
-                                    }
-                                }else if((move.x - x != 0) && (move.y - y == 0))
-                                {
-                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_BLACK)
-                                    {
-                                        alineado = 1;
-                                    }
-                                }else if((move.x - x) == (move.y - y))
-                                {
-                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_BLACK)
-                                    {
-                                        alineado = 1;
-                                    }
                                 }
-
-                                if(alineado == 1)
-                                    validMoves.push_back(move);
-                                
+                                else
+                                {
+                                    break;
+                                }
+                                moveAux.x += direccion.x;
+                                moveAux.y += direccion.y;
+                            }
+                            if(alineado)
+                            {
+                                validMoves.push_back(move);
+                                break;
                             }
                         }
                     }
-    
-                }
-                else
+                }else
                 {
-                    Square moveAux = move;
-                    moveAux.x++;
-                    if(isSquareValid(moveAux))
+                    for(int i = 0; i < 4 && !adyascencia; i++)
                     {
-                        if(getBoardPiece(model, moveAux) == PIECE_BLACK)
+                        moveAux = move;
+                        moveAux.x += direcciones[i].x;
+                        moveAux.y += direcciones[i].y;
+                        if (isSquareValid(moveAux))
                         {
-                            adyascencia = 1;
-                        }
-                    }
-                    if (adyascencia == 0)
-                    {
-                        moveAux.x -= 2;
-                        if(isSquareValid(moveAux))
-                        {
-                            if(getBoardPiece(model, moveAux) == PIECE_BLACK)
+                            if(getBoardPiece(model,moveAux) == PIECE_BLACK)
                             {
-                                adyascencia = 1;
+                                adyascencia = true;
                             }
                         }
                     }
-                    if (adyascencia == 0)
+                    if(adyascencia)
                     {
-                        moveAux.x++;
-                        moveAux.y++;
-                        if(isSquareValid(moveAux))
+                        for(auto& direccion : direcciones)
                         {
-                            if(getBoardPiece(model, moveAux) == PIECE_BLACK)
+                            bool oponenteEncontrado = false;
+                            moveAux = move;
+                            moveAux.x += direccion.x;
+                            moveAux.y += direccion.y;
+                            while(isSquareValid(moveAux))
                             {
-                                adyascencia = 1;
-                            }
-                        }
-                    }
-                    if (adyascencia == 0)
-                    {
-                        moveAux.y -= 2;
-                        if(isSquareValid(moveAux))
-                        {
-                            if(getBoardPiece(model, moveAux) == PIECE_BLACK)
-                            {
-                                adyascencia = 1;
-                            }
-                        }
-                    }
-
-                    if(adyascencia == 1)
-                    {
-                        // Chequeamos linealidad con alguna ficha propia
-                        for (int y = 0; y < BOARD_SIZE; y++)
-                        {
-                            if(alineado == 1)
-                                break;
-
-                            for (int x = 0; x < BOARD_SIZE; x++)
-                            {
-                                if(alineado == 1)
+                                if(getBoardPiece(model,moveAux) == PIECE_BLACK)
+                                {
+                                    oponenteEncontrado = true;
+                                }else if(getBoardPiece(model,moveAux) == PIECE_WHITE && oponenteEncontrado)
+                                {
+                                    alineado = true;
                                     break;
-
-                                if((move.x - x == 0) && (move.y - y != 0))
-                                {
-                                    // chequeamos si hay una ficha del color propio
-                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_WHITE)
-                                    {
-                                        alineado = 1;
-                                    }
-                                }else if((move.x - x != 0) && (move.y - y == 0))
-                                {
-                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_WHITE)
-                                    {
-                                        alineado = 1;
-                                    }
-                                }else if((move.x - x) == (move.y - y))
-                                {
-                                    if(getBoardPiece(model, (Square){x,y}) == PIECE_WHITE)
-                                    {
-                                        alineado = 1;
-                                    }
                                 }
-
-                                if(alineado == 1)
-                                    validMoves.push_back(move);
-                                
+                                else
+                                {
+                                    break;
+                                }
+                                moveAux.x += direccion.x;
+                                moveAux.y += direccion.y;
+                            }
+                            if(alineado)
+                            {
+                                validMoves.push_back(move);
+                                break;
                             }
                         }
                     }
-
                 }
             }
-            
         }
 
 }
