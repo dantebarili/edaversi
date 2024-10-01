@@ -21,7 +21,7 @@ bool gameIsOver(GameModel& model);
 
 int evaluateBoard(GameModel& model, Player currentPlayer);
 
-int minimax(GameModel &model, int depth, bool maximizingPlayer);
+int minimax(GameModel &model, int depth, bool maximizingPlayer, int alpha, int beta, int &nodosEvaluados, int maxNodos);
 
 
 #endif
