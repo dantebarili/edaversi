@@ -90,7 +90,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
 {
 
     Player player = getCurrentPlayer(model);
-    bool adyascencia;
+    //bool adyascencia;
     bool alineado;
     std::vector<Square> direcciones = {{1,0},{0,1},{-1,0},{0,-1},{1,1},{-1,1},{-1,-1},{1,-1}};
 
@@ -99,7 +99,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
         for (int x = 0; x < BOARD_SIZE; x++)
         {
             Square move = {x, y};
-            adyascencia = false;
+            //adyascencia = false;
             alineado = false;
             
             if (getBoardPiece(model, move) == PIECE_EMPTY)
@@ -108,7 +108,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
 
                 if(player == PLAYER_BLACK)
                 {
-                    for(int i = 0; i < 4 && !adyascencia; i++)
+                    /*for(int i = 0; i < 4 && !adyascencia; i++)
                     {
                         moveAux = move;
                         moveAux.x += direcciones[i].x;
@@ -122,7 +122,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                         }
                     }
                     if(adyascencia)
-                    {
+                    {*/
                         for(auto& direccion : direcciones)
                         {
                             bool oponenteEncontrado = false;
@@ -152,10 +152,10 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                                 break;
                             }
                         }
-                    }
+                    //}
                 }else
                 {
-                    for(int i = 0; i < 4 && !adyascencia; i++)
+                    /*for(int i = 0; i < 4 && !adyascencia; i++)
                     {
                         moveAux = move;
                         moveAux.x += direcciones[i].x;
@@ -169,7 +169,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                         }
                     }
                     if(adyascencia)
-                    {
+                    {*/
                         for(auto& direccion : direcciones)
                         {
                             bool oponenteEncontrado = false;
@@ -199,7 +199,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                                 break;
                             }
                         }
-                    }
+                    //}
                 }
             }
         }
