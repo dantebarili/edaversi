@@ -11,8 +11,8 @@
 #include "controller.h"
 #include <limits.h>
 
-#define DEPTH_LIMIT 10
-#define MAX_NODOS 10000
+#define DEPTH_LIMIT 50
+#define MAX_NODOS 500000
 
 Square getBestMove(GameModel &model)
 {
