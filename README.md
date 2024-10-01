@@ -5,8 +5,6 @@
 * Barili Dante: Ejecucion de la jugada, IA
 * Forster Juan Ignacio: Movimientos validos, IA
 
-[completar]
-
 ## Parte 1: Generación de movimientos válidos y algoritmo de jugada
 
 Para probar que se generaban movimientos validos, simplemente se probaban varias jugadas hasta detectar el error, probando los distintos casos posibles, como encerrar fichas del contrario en diagonal, en vertical, horizontal, etc. Tambien se probo colocar una ficha de manera que las fichas del contrincante queden encerradas entre varias fichas propias.
@@ -20,6 +18,8 @@ A la hora de implementar el algoritmo minimax se tuvo en cuenta la creacion fisi
 ## Parte 3: Poda del árbol
 
 [Justifica por qué el algoritmo minimax de la parte anterior no se completa. Consejo: determina la complejidad computacional.]
+
+El algoritmo minimax no se completa debido a que a medida que el arbol se ramifica, la cantidad de casos (nodos) posibles, crece exponencialmente (O[exp]) debido a que en cada nivel que simulamos (movimiento del jugador min o el jugador max) se abren cada vez mas posibilidades.
 
 ## Documentación adicional
 
