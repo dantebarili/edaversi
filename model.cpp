@@ -99,7 +99,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
         for (int x = 0; x < BOARD_SIZE; x++)
         {
             Square move = {x, y};
-            //adyascencia = false;
+            
             alineado = false;
             
             if (getBoardPiece(model, move) == PIECE_EMPTY)
@@ -108,21 +108,6 @@ void getValidMoves(GameModel &model, Moves &validMoves)
 
                 if(player == PLAYER_BLACK)
                 {
-                    /*for(int i = 0; i < 4 && !adyascencia; i++)
-                    {
-                        moveAux = move;
-                        moveAux.x += direcciones[i].x;
-                        moveAux.y += direcciones[i].y;
-                        if (isSquareValid(moveAux))
-                        {
-                            if(getBoardPiece(model,moveAux) == PIECE_WHITE)
-                            {
-                                adyascencia = true;
-                            }
-                        }
-                    }
-                    if(adyascencia)
-                    {*/
                         for(auto& direccion : direcciones)
                         {
                             bool oponenteEncontrado = false;
@@ -152,24 +137,9 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                                 break;
                             }
                         }
-                    //}
+                    
                 }else
                 {
-                    /*for(int i = 0; i < 4 && !adyascencia; i++)
-                    {
-                        moveAux = move;
-                        moveAux.x += direcciones[i].x;
-                        moveAux.y += direcciones[i].y;
-                        if (isSquareValid(moveAux))
-                        {
-                            if(getBoardPiece(model,moveAux) == PIECE_BLACK)
-                            {
-                                adyascencia = true;
-                            }
-                        }
-                    }
-                    if(adyascencia)
-                    {*/
                         for(auto& direccion : direcciones)
                         {
                             bool oponenteEncontrado = false;
@@ -199,7 +169,7 @@ void getValidMoves(GameModel &model, Moves &validMoves)
                                 break;
                             }
                         }
-                    //}
+                    
                 }
             }
         }
